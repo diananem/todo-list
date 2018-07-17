@@ -1,12 +1,12 @@
 .App {
-  text-align: center;
-  width: 60%;
+  max-width: 600px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .main-input {
   height: 50px;
-  width: 500px;
+  width: 100%;
   font-size: 20px;
 }
 input::placeholder {
@@ -14,11 +14,12 @@ input::placeholder {
 }
 ul {
   list-style-type: none;
+  padding-left: 0;
 }
 .list-item {
-  display: flex;
 }
 .checkbox-item {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
+  margin: 0;
 }

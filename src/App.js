@@ -8,14 +8,42 @@ class App extends Component {
     tasks: []
   };
 
+  toEditTask = taskIndex => () => {
+    const editTask = [...this.state.tasks];
+    editTask[taskIndex] = {
+      ...editTask[taskIndex],
+      edit: true
+    };
+
+    this.setState({
+      tasks: editTask
+    });
+  };
+
+  saveEditTask = taskIndex => ({ target: { value }, keyCode }) => {
+    if (keyCode === 13) {
+      const saveTask = [...this.state.tasks];
+      saveTask[taskIndex] = {
+        ...saveTask[taskIndex],
+        text: value,
+        edit: false
+      };
+
+      this.setState({
+        tasks: saveTask
+      });
+    }
+  };
+
   toCreateTask = e => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && this.state.input !== "") {
       const tasks = this.state.tasks;
       tasks.push({
         done: false,
+        edit: false,
         text: this.state.input
       });
-      const newTask = this.setState({
+      this.setState({
         tasks: tasks,
         input: ""
       });
@@ -38,9 +66,7 @@ class App extends Component {
       tasks: updatedTasks
     });
   };
-  //1. Find task in array
-  //2. Change this task (change done to !this.state.tasks[taskIndex].done)
-  //3. Update state
+
   renderTaskItems() {
     return (
       <ul className="todo-list">
@@ -54,7 +80,16 @@ class App extends Component {
                 value={task.done}
                 onClick={this.toggleStatus(index)}
               />
-              <label htmlFor={index}>{task.text}</label>
+              {task.edit ? (
+                <input
+                  defaultValue={task.text}
+                  onKeyDown={this.saveEditTask(index)}
+                />
+              ) : (
+                <label htmlFor={index} onDoubleClick={this.toEditTask(index)}>
+                  {task.text}
+                </label>
+              )}
             </div>
           </li>
         ))}
