@@ -76,6 +76,18 @@ class App extends Component {
     });
   };
 
+  toStopEditing = taskIndex => () => {
+    console.log("wow");
+    const stopEdit = [...this.state.tasks];
+    stopEdit[taskIndex] = {
+      ...stopEdit[taskIndex],
+      edit: false
+    };
+    this.setState({
+      tasks: stopEdit
+    });
+  };
+
   renderTaskItems() {
     return (
       <div className="todo-list">
@@ -92,8 +104,10 @@ class App extends Component {
                 />
                 {task.edit ? (
                   <input
+                    className="task-editing"
                     defaultValue={task.text}
                     onKeyDown={this.saveEditTask(index)}
+                    onBlur={this.toStopEditing(index)}
                   />
                 ) : (
                   <span

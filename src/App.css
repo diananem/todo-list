@@ -19,22 +19,35 @@ ul {
 .list-item {
   display: inline-flex;
   align-items: center;
-  margin-top: -10px;
   line-height: 3;
   width: 100%;
 }
+.list-item:hover .delete-button {
+  display: block;
+}
+
 .task-text {
-  font-size: 20px;
-  vertical-align: center;
+  font-size: 30px;
+  /*vertical-align: center; */
   flex: 1;
 }
+.task-editing {
+  font-size: 25px;
+  width: 100%;
+}
+
 .checkbox-item {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   margin: 0;
 }
 .delete-button {
-  font-size: 20px;
+  display: none;
+  font-size: 30px;
   border: none;
   background: none;
+  color: rgb(226, 123, 123);
+}
+.delete-button:hover {
+  color: rgb(172, 5, 5);
 }
