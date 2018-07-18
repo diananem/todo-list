@@ -67,38 +67,72 @@ class App extends Component {
     });
   };
 
+  toDeleteTask = taskIndex => () => {
+    const tasks = this.state.tasks;
+    const deleteTask = [...this.state.tasks];
+    deleteTask.splice(taskIndex, 1);
+    this.setState({
+      tasks: deleteTask
+    });
+  };
+
+  toStopEditing = taskIndex => () => {
+    console.log("wow");
+    const stopEdit = [...this.state.tasks];
+    stopEdit[taskIndex] = {
+      ...stopEdit[taskIndex],
+      edit: false
+    };
+    this.setState({
+      tasks: stopEdit
+    });
+  };
+
   renderTaskItems() {
     return (
-      <ul className="todo-list">
-        {this.state.tasks.map((task, index) => (
-          <li key={index}>
-            <div className="list-item">
-              <input
-                className="checkbox-item"
-                type="checkbox"
-                id={index}
-                value={task.done}
-                onClick={this.toggleStatus(index)}
-              />
-              {task.edit ? (
+      <div className="todo-list">
+        <ul>
+          {this.state.tasks.map((task, index) => (
+            <li key={index}>
+              <div className="list-item">
                 <input
-                  defaultValue={task.text}
-                  onKeyDown={this.saveEditTask(index)}
+                  className="checkbox-item"
+                  type="checkbox"
+                  id={index}
+                  value={task.done}
+                  onClick={this.toggleStatus(index)}
                 />
-              ) : (
-                <label htmlFor={index} onDoubleClick={this.toEditTask(index)}>
-                  {task.text}
-                </label>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+                {task.edit ? (
+                  <input
+                    className="task-editing"
+                    defaultValue={task.text}
+                    onKeyDown={this.saveEditTask(index)}
+                    onBlur={this.toStopEditing(index)}
+                  />
+                ) : (
+                  <span
+                    className="task-text"
+                    onDoubleClick={this.toEditTask(index)}
+                  >
+                    {task.text}
+                  </span>
+                )}
+                <button
+                  className="delete-button"
+                  onClick={this.toDeleteTask(index)}
+                >
+                  {" "}
+                  x{" "}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
   render() {
     const isListNotEmpty = true;
-    console.log(this.state);
     return (
       <div className="App">
         <h1 className="header-text">TODO List:</h1>
