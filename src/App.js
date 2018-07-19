@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
+
+const TASK_KEY = "tasks";
 
 class App extends Component {
   state = {
@@ -8,16 +9,28 @@ class App extends Component {
     tasks: []
   };
 
+  componentDidMount() {
+    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    if (savedTasks !== null) {
+      this.setState({
+        tasks: savedTasks
+      });
+    }
+  }
+
+  updateStateTasks(tasks) {
+    this.setState({ tasks: tasks }, () => {
+      localStorage.setItem(TASK_KEY, JSON.stringify(tasks));
+    });
+  }
+
   toEditTask = taskIndex => () => {
     const editTask = [...this.state.tasks];
     editTask[taskIndex] = {
       ...editTask[taskIndex],
       edit: true
     };
-
-    this.setState({
-      tasks: editTask
-    });
+    this.updateStateTasks(editTask);
   };
 
   saveEditTask = taskIndex => ({ target: { value }, keyCode }) => {
@@ -28,10 +41,7 @@ class App extends Component {
         text: value,
         edit: false
       };
-
-      this.setState({
-        tasks: saveTask
-      });
+      this.updateStateTasks(saveTask);
     }
   };
 
@@ -43,8 +53,9 @@ class App extends Component {
         edit: false,
         text: this.state.input
       });
+
+      this.updateStateTasks(tasks);
       this.setState({
-        tasks: tasks,
         input: ""
       });
     }
@@ -62,30 +73,22 @@ class App extends Component {
       done: !updatedTasks[taskIndex].done,
       text: updatedTasks[taskIndex].text
     };
-    this.setState({
-      tasks: updatedTasks
-    });
+    this.updateStateTasks(updatedTasks);
   };
 
   toDeleteTask = taskIndex => () => {
-    const tasks = this.state.tasks;
     const deleteTask = [...this.state.tasks];
     deleteTask.splice(taskIndex, 1);
-    this.setState({
-      tasks: deleteTask
-    });
+    this.updateStateTasks(deleteTask);
   };
 
   toStopEditing = taskIndex => () => {
-    console.log("wow");
     const stopEdit = [...this.state.tasks];
     stopEdit[taskIndex] = {
       ...stopEdit[taskIndex],
       edit: false
     };
-    this.setState({
-      tasks: stopEdit
-    });
+    this.updateStateTasks(stopEdit);
   };
 
   renderTaskItems() {
@@ -110,12 +113,12 @@ class App extends Component {
                     onBlur={this.toStopEditing(index)}
                   />
                 ) : (
-                  <span
+                  <div
                     className="task-text"
                     onDoubleClick={this.toEditTask(index)}
                   >
                     {task.text}
-                  </span>
+                  </div>
                 )}
                 <button
                   className="delete-button"
@@ -132,7 +135,6 @@ class App extends Component {
     );
   }
   render() {
-    const isListNotEmpty = true;
     return (
       <div className="App">
         <h1 className="header-text">TODO List:</h1>
