@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ClickOutside from "react-click-outside";
 import "./App.css";
 
 const TASK_KEY = "tasks";
@@ -90,8 +91,36 @@ class App extends Component {
     };
     this.updateStateTasks(stopEdit);
   };
+  toFilterAllTasks = () => {
+    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    this.setState({
+      tasks: savedTasks
+    });
+  };
+  toFilterActiveTasks = () => {
+    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const activeTasks = savedTasks.filter(task => !task.done);
+    this.setState({
+      tasks: activeTasks
+    });
+  };
+  toFilterCompletedTasks = () => {
+    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const completedTasks = savedTasks.filter(task => task.done);
+    this.setState({
+      tasks: completedTasks
+    });
+  };
+  toClearCompleted = () => {
+    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const completedTasks = savedTasks.filter(task => !task.done);
+    this.setState({ tasks: completedTasks }, () => {
+      localStorage.setItem(TASK_KEY, JSON.stringify(completedTasks));
+    });
+  };
 
   renderTaskItems() {
+    console.log(this.state.tasks);
     return (
       <div className="todo-list">
         <ul>
@@ -102,16 +131,19 @@ class App extends Component {
                   className="checkbox-item"
                   type="checkbox"
                   id={index}
-                  value={task.done}
-                  onClick={this.toggleStatus(index)}
+                  checked={task.done}
+                  onChange={this.toggleStatus(index)}
                 />
                 {task.edit ? (
-                  <input
+                  <ClickOutside
+                    onClickOutside={this.toStopEditing(index)}
                     className="task-editing"
-                    defaultValue={task.text}
-                    onKeyDown={this.saveEditTask(index)}
-                    onBlur={this.toStopEditing(index)}
-                  />
+                  >
+                    <input
+                      defaultValue={task.text}
+                      onKeyDown={this.saveEditTask(index)}
+                    />
+                  </ClickOutside>
                 ) : (
                   <div
                     className="task-text"
@@ -148,6 +180,12 @@ class App extends Component {
         />
 
         {this.renderTaskItems()}
+
+        <button onClick={this.toFilterAllTasks}> All </button>
+        <button onClick={this.toFilterActiveTasks}> Active </button>
+        <button onClick={this.toFilterCompletedTasks}> Completed </button>
+
+        <button onClick={this.toClearCompleted}> Clear completed </button>
       </div>
     );
   }

@@ -21,6 +21,7 @@ ul {
   align-items: center;
   line-height: 3;
   width: 100%;
+  min-height: 90px;
 }
 .list-item:hover .delete-button {
   display: block;
@@ -28,16 +29,16 @@ ul {
 
 .task-text {
   font-size: 30px;
-  /*vertical-align: center; */
   flex: 1;
 }
-.task-editing {
-  font-size: 25px;
+.task-editing,
+.task-editing input {
+  font-size: 30px;
   width: 100%;
 }
 
 .checkbox-item {
-  width: 30px;
+  min-width: 30px;
   height: 30px;
   margin: 0;
 }
@@ -50,4 +51,7 @@ ul {
 }
 .delete-button:hover {
   color: rgb(172, 5, 5);
+}
+.buttons {
+  display: flex;
 }
