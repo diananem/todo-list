@@ -52,6 +52,9 @@ ul {
 .delete-button:hover {
   color: rgb(172, 5, 5);
 }
+.delete-button-hidden {
+  display: none;
+}
 .buttons {
   display: flex;
 }

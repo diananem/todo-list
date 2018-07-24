@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import ClickOutside from "react-click-outside";
+import { getSavedTasks, TASK_KEY } from "./utils";
 import "./App.css";
-
-const TASK_KEY = "tasks";
 
 class App extends Component {
   state = {
@@ -11,7 +10,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     if (savedTasks !== null) {
       this.setState({
         tasks: savedTasks
@@ -76,7 +75,6 @@ class App extends Component {
     };
     this.updateStateTasks(updatedTasks);
   };
-
   toDeleteTask = taskIndex => () => {
     const deleteTask = [...this.state.tasks];
     deleteTask.splice(taskIndex, 1);
@@ -92,35 +90,39 @@ class App extends Component {
     this.updateStateTasks(stopEdit);
   };
   toFilterAllTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     this.setState({
       tasks: savedTasks
     });
   };
   toFilterActiveTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     const activeTasks = savedTasks.filter(task => !task.done);
     this.setState({
       tasks: activeTasks
     });
   };
   toFilterCompletedTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     const completedTasks = savedTasks.filter(task => task.done);
     this.setState({
       tasks: completedTasks
     });
   };
   toClearCompleted = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     const completedTasks = savedTasks.filter(task => !task.done);
     this.setState({ tasks: completedTasks }, () => {
       localStorage.setItem(TASK_KEY, JSON.stringify(completedTasks));
     });
   };
+  toCountActiveTasks() {
+    const tasks = this.state.tasks;
+    const countTasks = tasks.filter(task => !task.done);
+    return `${countTasks.length} items left`;
+  }
 
   renderTaskItems() {
-    console.log(this.state.tasks);
     return (
       <div className="todo-list">
         <ul>
@@ -153,7 +155,9 @@ class App extends Component {
                   </div>
                 )}
                 <button
-                  className="delete-button"
+                  className={
+                    task.edit ? "delete-button-hidden" : "delete-button"
+                  }
                   onClick={this.toDeleteTask(index)}
                 >
                   {" "}
@@ -180,12 +184,16 @@ class App extends Component {
         />
 
         {this.renderTaskItems()}
+        {this.state.tasks.length !== 0 && (
+          <div>
+            {this.toCountActiveTasks()}
+            <button onClick={this.toFilterAllTasks}> All </button>
+            <button onClick={this.toFilterActiveTasks}> Active </button>
+            <button onClick={this.toFilterCompletedTasks}> Completed </button>
 
-        <button onClick={this.toFilterAllTasks}> All </button>
-        <button onClick={this.toFilterActiveTasks}> Active </button>
-        <button onClick={this.toFilterCompletedTasks}> Completed </button>
-
-        <button onClick={this.toClearCompleted}> Clear completed </button>
+            <button onClick={this.toClearCompleted}> Clear completed </button>
+          </div>
+        )}
       </div>
     );
   }
