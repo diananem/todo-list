@@ -136,6 +136,10 @@ class App extends Component {
                   checked={task.done}
                   onChange={this.toggleStatus(index)}
                 />
+                <span
+                  className="check-box"
+                  onClick={this.toggleStatus(index)}
+                />
                 {task.edit ? (
                   <ClickOutside
                     onClickOutside={this.toStopEditing(index)}
@@ -148,7 +152,7 @@ class App extends Component {
                   </ClickOutside>
                 ) : (
                   <div
-                    className="task-text"
+                    className={task.done ? "task-text-comleted" : "task-text"}
                     onDoubleClick={this.toEditTask(index)}
                   >
                     {task.text}
@@ -160,8 +164,7 @@ class App extends Component {
                   }
                   onClick={this.toDeleteTask(index)}
                 >
-                  {" "}
-                  x{" "}
+                  ✕
                 </button>
               </div>
             </li>
@@ -177,7 +180,7 @@ class App extends Component {
         <input
           className="main-input"
           type="text"
-          placeholder="What needs to be done?"
+          placeholder=" What needs to be done?"
           onChange={this.handleInputChange}
           onKeyDown={this.toCreateTask}
           value={this.state.input}
@@ -185,13 +188,20 @@ class App extends Component {
 
         {this.renderTaskItems()}
         {this.state.tasks.length !== 0 && (
-          <div>
-            {this.toCountActiveTasks()}
-            <button onClick={this.toFilterAllTasks}> All </button>
-            <button onClick={this.toFilterActiveTasks}> Active </button>
-            <button onClick={this.toFilterCompletedTasks}> Completed </button>
+          <div className="footer">
+            <div className="counter"> {this.toCountActiveTasks()}</div>
 
-            <button onClick={this.toClearCompleted}> Clear completed </button>
+            <div className="buttons">
+              <button onClick={this.toFilterAllTasks}>All</button>
+              <button onClick={this.toFilterActiveTasks}>Active</button>
+              <button onClick={this.toFilterCompletedTasks}>Completed</button>
+            </div>
+            <button
+              className="button-destroy-tasks"
+              onClick={this.toClearCompleted}
+            >
+              Clear completed
+            </button>
           </div>
         )}
       </div>

@@ -3,14 +3,25 @@
   width: 100%;
   margin: 0 auto;
 }
+.header-text {
+  text-align: center;
+  color: rgb(233, 99, 133);
+}
 
 .main-input {
   height: 50px;
-  width: 100%;
+  width: 96%;
   font-size: 20px;
+  padding: 10px;
+  border: 2px solid #ecf0f1;
 }
 input::placeholder {
   color: lightgray;
+}
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ecf0f1;
 }
 ul {
   list-style-type: none;
@@ -19,9 +30,11 @@ ul {
 .list-item {
   display: inline-flex;
   align-items: center;
-  line-height: 3;
   width: 100%;
-  min-height: 90px;
+
+  cursor: default;
+  border-bottom: 1px solid #ecf0f1;
+  position: relative;
 }
 .list-item:hover .delete-button {
   display: block;
@@ -30,24 +43,87 @@ ul {
 .task-text {
   font-size: 30px;
   flex: 1;
+  max-width: 78%;
+  word-wrap: break-word;
+  padding: 15px;
+}
+.task-text-comleted {
+  text-decoration: line-through;
+  color: lightgray;
+  font-size: 30px;
+  flex: 1;
+  max-width: 78%;
+  word-wrap: break-word;
+  padding: 15px;
 }
 .task-editing,
 .task-editing input {
   font-size: 30px;
-  width: 100%;
+  width: 95%;
 }
 
 .checkbox-item {
-  min-width: 30px;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  appearance: none;
+  opacity: 0;
+}
+
+.checkbox-item:checked {
+  background-color: #b3ffb7;
+}
+.tasks-text:after {
+  content: "";
+  display: block;
+  width: 0%;
+  height: 2px;
+  background-color: #000;
+  position: absolute;
+  top: 50%;
+  left: 7.5%;
+  transform: translateY(-50%);
+  transition: width 100ms ease-in-out;
+}
+
+.checkbox-item:checked {
+  background-color: #f9f9f9;
+}
+
+.checkbox-item:checked + .check-box {
+  background-color: white;
+}
+
+.checkbox-item:checked + .check-box:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 5px;
+  left: 11px;
+  width: 6px;
+  height: 15px;
+  border: solid #3498db;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.check-box {
+  display: flex;
+  align-self: center;
+  position: relative;
   height: 30px;
-  margin: 0;
+  min-width: 30px;
+  margin: 10px;
+  border: 1px solid #3498db;
+  border-radius: 50%;
 }
 .delete-button {
   display: none;
-  font-size: 30px;
+  font-size: 20px;
   border: none;
   background: none;
   color: rgb(226, 123, 123);
+  cursor: pointer;
 }
 .delete-button:hover {
   color: rgb(172, 5, 5);
@@ -55,6 +131,29 @@ ul {
 .delete-button-hidden {
   display: none;
 }
-.buttons {
+.footer {
   display: flex;
+  border: 1px solid #ecf0f1;
+}
+.footer button {
+  font-size: 15px;
+  height: 30px;
+  background-color: white;
+  border: none;
+  margin: 10px;
+  border-radius: 5px;
+}
+.footer button:hover {
+  border: 1px solid #3498db;
+}
+.buttons {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.counter {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  padding-left: 15px;
 }
