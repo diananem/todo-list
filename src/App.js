@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import ClickOutside from "react-click-outside";
+import { getSavedTasks, TASK_KEY } from "./utils";
 import "./App.css";
-
-const TASK_KEY = "tasks";
 
 class App extends Component {
   state = {
@@ -11,7 +10,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     if (savedTasks !== null) {
       this.setState({
         tasks: savedTasks
@@ -76,7 +75,6 @@ class App extends Component {
     };
     this.updateStateTasks(updatedTasks);
   };
-
   toDeleteTask = taskIndex => () => {
     const deleteTask = [...this.state.tasks];
     deleteTask.splice(taskIndex, 1);
@@ -92,35 +90,39 @@ class App extends Component {
     this.updateStateTasks(stopEdit);
   };
   toFilterAllTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     this.setState({
       tasks: savedTasks
     });
   };
   toFilterActiveTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     const activeTasks = savedTasks.filter(task => !task.done);
     this.setState({
       tasks: activeTasks
     });
   };
   toFilterCompletedTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     const completedTasks = savedTasks.filter(task => task.done);
     this.setState({
       tasks: completedTasks
     });
   };
   toClearCompleted = () => {
-    const savedTasks = JSON.parse(localStorage.getItem(TASK_KEY));
+    const savedTasks = getSavedTasks();
     const completedTasks = savedTasks.filter(task => !task.done);
     this.setState({ tasks: completedTasks }, () => {
       localStorage.setItem(TASK_KEY, JSON.stringify(completedTasks));
     });
   };
+  toCountActiveTasks() {
+    const tasks = this.state.tasks;
+    const countTasks = tasks.filter(task => !task.done);
+    return `${countTasks.length} items left`;
+  }
 
   renderTaskItems() {
-    console.log(this.state.tasks);
     return (
       <div className="todo-list">
         <ul>
@@ -134,6 +136,10 @@ class App extends Component {
                   checked={task.done}
                   onChange={this.toggleStatus(index)}
                 />
+                <span
+                  className="check-box"
+                  onClick={this.toggleStatus(index)}
+                />
                 {task.edit ? (
                   <ClickOutside
                     onClickOutside={this.toStopEditing(index)}
@@ -146,18 +152,19 @@ class App extends Component {
                   </ClickOutside>
                 ) : (
                   <div
-                    className="task-text"
+                    className={task.done ? "task-text-comleted" : "task-text"}
                     onDoubleClick={this.toEditTask(index)}
                   >
                     {task.text}
                   </div>
                 )}
                 <button
-                  className="delete-button"
+                  className={
+                    task.edit ? "delete-button-hidden" : "delete-button"
+                  }
                   onClick={this.toDeleteTask(index)}
                 >
-                  {" "}
-                  x{" "}
+                  ✕
                 </button>
               </div>
             </li>
@@ -173,19 +180,30 @@ class App extends Component {
         <input
           className="main-input"
           type="text"
-          placeholder="What needs to be done?"
+          placeholder=" What needs to be done?"
           onChange={this.handleInputChange}
           onKeyDown={this.toCreateTask}
           value={this.state.input}
         />
 
         {this.renderTaskItems()}
+        {this.state.tasks.length !== 0 && (
+          <div className="footer">
+            <div className="counter"> {this.toCountActiveTasks()}</div>
 
-        <button onClick={this.toFilterAllTasks}> All </button>
-        <button onClick={this.toFilterActiveTasks}> Active </button>
-        <button onClick={this.toFilterCompletedTasks}> Completed </button>
-
-        <button onClick={this.toClearCompleted}> Clear completed </button>
+            <div className="buttons">
+              <button onClick={this.toFilterAllTasks}>All</button>
+              <button onClick={this.toFilterActiveTasks}>Active</button>
+              <button onClick={this.toFilterCompletedTasks}>Completed</button>
+            </div>
+            <button
+              className="button-destroy-tasks"
+              onClick={this.toClearCompleted}
+            >
+              Clear completed
+            </button>
+          </div>
+        )}
       </div>
     );
   }
