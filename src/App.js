@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import ClickOutside from "react-click-outside";
-import { getSavedTasks, TASK_KEY } from "./utils";
+import nanoid from "nanoid";
+import { getSavedTasks, TASK_KEY, FILTER_STATUSES } from "./utils";
 import "./App.css";
 
 class App extends Component {
   state = {
     input: "",
-    tasks: []
+    tasks: [],
+    activeFilter: FILTER_STATUSES["all"]
   };
 
   componentDidMount() {
@@ -50,6 +52,7 @@ class App extends Component {
       tasks.push({
         done: false,
         edit: false,
+        id: nanoid(),
         text: this.state.input
       });
 
@@ -66,12 +69,14 @@ class App extends Component {
     });
   };
 
-  toggleStatus = taskIndex => () => {
-    const updatedTasks = [...this.state.tasks];
-    updatedTasks[taskIndex] = {
-      done: !updatedTasks[taskIndex].done,
-      text: updatedTasks[taskIndex].text
-    };
+  toggleStatus = taskId => () => {
+    const updatedTasks = getSavedTasks().map(task => {
+      if (task.id === taskId) {
+        return { ...task, done: !task.done };
+      }
+      return task;
+    });
+
     this.updateStateTasks(updatedTasks);
   };
   toDeleteTask = taskIndex => () => {
@@ -91,21 +96,24 @@ class App extends Component {
   toFilterAllTasks = () => {
     const savedTasks = getSavedTasks();
     this.setState({
-      tasks: savedTasks
+      tasks: savedTasks,
+      activeFilter: FILTER_STATUSES["all"]
     });
   };
   toFilterActiveTasks = () => {
     const savedTasks = getSavedTasks();
     const activeTasks = savedTasks.filter(task => !task.done);
     this.setState({
-      tasks: activeTasks
+      tasks: activeTasks,
+      activeFilter: FILTER_STATUSES["active"]
     });
   };
   toFilterCompletedTasks = () => {
     const savedTasks = getSavedTasks();
     const completedTasks = savedTasks.filter(task => task.done);
     this.setState({
-      tasks: completedTasks
+      tasks: completedTasks,
+      activeFilter: FILTER_STATUSES["completed"]
     });
   };
   toClearCompleted = () => {
@@ -122,11 +130,25 @@ class App extends Component {
     return `${countTasks.length} items left`;
   }
 
+  getDisplayedTasks() {
+    switch (this.state.activeFilter) {
+      case FILTER_STATUSES["all"]:
+        return this.state.tasks;
+      case FILTER_STATUSES["active"]:
+        return this.state.tasks.filter(task => !task.done);
+      case FILTER_STATUSES["completed"]:
+        return this.state.tasks.filter(task => task.done);
+
+      default:
+        return this.state.tasks;
+    }
+  }
+
   renderTaskItems() {
     return (
       <div className="todo-list">
         <ul>
-          {this.state.tasks.map((task, index) => (
+          {this.getDisplayedTasks().map((task, index) => (
             <li key={index} className="list">
               <div className="list-item">
                 <input
@@ -134,11 +156,10 @@ class App extends Component {
                   type="checkbox"
                   id={index}
                   checked={task.done}
-                  onChange={this.toggleStatus(index)}
                 />
                 <span
                   className="check-box"
-                  onClick={this.toggleStatus(index)}
+                  onClick={this.toggleStatus(task.id)}
                 />
                 {task.edit ? (
                   <ClickOutside
@@ -175,6 +196,7 @@ class App extends Component {
   }
   render() {
     console.log(this.state.tasks.filter(task => task.done).length);
+    console.log(nanoid());
     return (
       <div className="App">
         <h1 className="header-text">TODO List:</h1>
