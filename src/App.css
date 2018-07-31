@@ -11,21 +11,30 @@
 .main-input {
   height: 50px;
   width: 96%;
-  font-size: 20px;
+  font-size: 30px;
   padding: 10px;
   border: 2px solid #ecf0f1;
 }
 input::placeholder {
   color: lightgray;
 }
+.list-box {
+  border: 1px solid #ecf0f1;
+}
 .todo-list {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ecf0f1;
 }
 ul {
   list-style-type: none;
   padding-left: 0;
+  margin: 0;
+}
+.list {
+  border-bottom: 1px solid #ecf0f1;
+}
+.list:last-child {
+  border-bottom: none;
 }
 .list-item {
   display: inline-flex;
@@ -33,7 +42,6 @@ ul {
   width: 100%;
 
   cursor: default;
-  border-bottom: 1px solid #ecf0f1;
   position: relative;
 }
 .list-item:hover .delete-button {
@@ -56,10 +64,15 @@ ul {
   word-wrap: break-word;
   padding: 15px;
 }
-.task-editing,
+.task-editing {
+  flex: 1;
+  display: flex;
+}
 .task-editing input {
   font-size: 30px;
-  width: 95%;
+  flex: 1;
+  margin-left: 15px;
+  min-height: 58px;
 }
 
 .checkbox-item {
@@ -141,12 +154,18 @@ ul {
   background-color: white;
   border: none;
   margin: 10px;
+  margin-left: 6px;
+  margin-right: 6px;
   border-radius: 5px;
+  cursor: pointer;
 }
 .footer button:hover {
   border: 1px solid #3498db;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 .buttons {
+  max-width: 63%;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -156,4 +175,10 @@ ul {
   align-items: center;
   font-size: 15px;
   padding-left: 15px;
+}
+.button-destroy-hidden {
+  display: none;
+}
+.button-destroy-tasks {
+  display: flex;
 }

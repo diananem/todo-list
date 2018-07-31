@@ -19,9 +19,8 @@ class App extends Component {
   }
 
   updateStateTasks(tasks) {
-    this.setState({ tasks: tasks }, () => {
-      localStorage.setItem(TASK_KEY, JSON.stringify(tasks));
-    });
+    localStorage.setItem(TASK_KEY, JSON.stringify(tasks));
+    this.setState({ tasks: tasks });
   }
 
   toEditTask = taskIndex => () => {
@@ -115,9 +114,10 @@ class App extends Component {
     this.setState({ tasks: completedTasks }, () => {
       localStorage.setItem(TASK_KEY, JSON.stringify(completedTasks));
     });
+    this.updateStateTasks(completedTasks);
   };
   toCountActiveTasks() {
-    const tasks = this.state.tasks;
+    const tasks = getSavedTasks();
     const countTasks = tasks.filter(task => !task.done);
     return `${countTasks.length} items left`;
   }
@@ -127,7 +127,7 @@ class App extends Component {
       <div className="todo-list">
         <ul>
           {this.state.tasks.map((task, index) => (
-            <li key={index}>
+            <li key={index} className="list">
               <div className="list-item">
                 <input
                   className="checkbox-item"
@@ -174,6 +174,7 @@ class App extends Component {
     );
   }
   render() {
+    console.log(this.state.tasks.filter(task => task.done).length);
     return (
       <div className="App">
         <h1 className="header-text">TODO List:</h1>
@@ -185,25 +186,30 @@ class App extends Component {
           onKeyDown={this.toCreateTask}
           value={this.state.input}
         />
+        <div className="list-box">
+          {this.renderTaskItems()}
+          {getSavedTasks().length !== 0 && (
+            <div className="footer">
+              <div className="counter"> {this.toCountActiveTasks()}</div>
 
-        {this.renderTaskItems()}
-        {this.state.tasks.length !== 0 && (
-          <div className="footer">
-            <div className="counter"> {this.toCountActiveTasks()}</div>
-
-            <div className="buttons">
-              <button onClick={this.toFilterAllTasks}>All</button>
-              <button onClick={this.toFilterActiveTasks}>Active</button>
-              <button onClick={this.toFilterCompletedTasks}>Completed</button>
+              <div className="buttons">
+                <button onClick={this.toFilterAllTasks}>All</button>
+                <button onClick={this.toFilterActiveTasks}>Active</button>
+                <button onClick={this.toFilterCompletedTasks}>Completed</button>
+              </div>
+              <button
+                className={
+                  this.state.tasks.filter(task => task.done).length !== 0
+                    ? "button-destroy-tasks"
+                    : "button-destroy-hidden"
+                }
+                onClick={this.toClearCompleted}
+              >
+                Clear completed
+              </button>
             </div>
-            <button
-              className="button-destroy-tasks"
-              onClick={this.toClearCompleted}
-            >
-              Clear completed
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
