@@ -195,8 +195,6 @@ class App extends Component {
     );
   }
   render() {
-    console.log(this.state.tasks.filter(task => task.done).length);
-    console.log(nanoid());
     return (
       <div className="App">
         <h1 className="header-text">TODO List:</h1>

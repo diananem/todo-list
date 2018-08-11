@@ -5,5 +5,5 @@ export const FILTER_STATUSES = {
   completed: "completed"
 };
 export function getSavedTasks() {
-  return JSON.parse(localStorage.getItem(TASK_KEY));
+  return JSON.parse(localStorage.getItem(TASK_KEY)) || [];
 }
