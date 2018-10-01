@@ -48,7 +48,7 @@ class App extends Component {
 
   toCreateTask = e => {
     if (e.keyCode === 13 && this.state.input !== "") {
-      const tasks = this.state.tasks;
+      const tasks = getSavedTasks();
       tasks.push({
         done: false,
         edit: false,
