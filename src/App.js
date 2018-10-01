@@ -213,9 +213,36 @@ class App extends Component {
               <div className="counter"> {this.toCountActiveTasks()}</div>
 
               <div className="buttons">
-                <button onClick={this.toFilterAllTasks}>All</button>
-                <button onClick={this.toFilterActiveTasks}>Active</button>
-                <button onClick={this.toFilterCompletedTasks}>Completed</button>
+                <button
+                  className={
+                    this.state.activeFilter === FILTER_STATUSES["all"]
+                      ? "selected-filter"
+                      : "footer-button"
+                  }
+                  onClick={this.toFilterAllTasks}
+                >
+                  All
+                </button>
+                <button
+                  className={
+                    this.state.activeFilter === FILTER_STATUSES["active"]
+                      ? "selected-filter"
+                      : "footer-button"
+                  }
+                  onClick={this.toFilterActiveTasks}
+                >
+                  Active
+                </button>
+                <button
+                  className={
+                    this.state.activeFilter === FILTER_STATUSES["completed"]
+                      ? "selected-filter"
+                      : "footer-button"
+                  }
+                  onClick={this.toFilterCompletedTasks}
+                >
+                  Completed
+                </button>
               </div>
               <button
                 className={

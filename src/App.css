@@ -148,7 +148,7 @@ ul {
   display: flex;
   border: 1px solid #ecf0f1;
 }
-.footer button {
+.footer-button {
   font-size: 15px;
   height: 30px;
   background-color: white;
@@ -159,10 +159,21 @@ ul {
   border-radius: 5px;
   cursor: pointer;
 }
-.footer button:hover {
+.footer-button:hover {
   border: 1px solid #3498db;
   margin-left: 5px;
   margin-right: 5px;
+}
+.selected-filter {
+  border: 1px solid #3498db;
+  font-size: 15px;
+  height: 30px;
+  background-color: white;
+  margin: 10px;
+  margin-left: 6px;
+  margin-right: 6px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .buttons {
   max-width: 63%;
@@ -181,4 +192,15 @@ ul {
 }
 .button-destroy-tasks {
   display: flex;
+  font-size: 15px;
+  height: 30px;
+  background-color: white;
+  border: none;
+  margin: 10px;
+  margin-left: 6px;
+  margin-right: 6px;
+  cursor: pointer;
+}
+.button-destroy-tasks:hover {
+  text-decoration: underline;
 }
